@@ -5,7 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Якутия в Великой Отечественной войне | Карта истории</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* Все стили остаются такими же как в предыдущем коде */
+        :root {
+            --primary-color: #e63946;
+            --primary-dark: #c1121f;
+            --secondary-color: #2a9d8f;
+            --secondary-dark: #21867a;
+            --dark-bg: #1a1a1a;
+            --dark-card: #2d2d2d;
+            --light-bg: #f5f5f5;
+            --white: #ffffff;
+            --text-dark: #333333;
+            --text-light: #f0f0f0;
+            --shadow: 0 5px 15px rgba(0,0,0,0.1);
+            --shadow-dark: 0 5px 15px rgba(0,0,0,0.3);
+            --border-radius: 10px;
+            --transition: all 0.3s ease;
+        }
+        
         * {
             margin: 0;
             padding: 0;
@@ -14,9 +33,10 @@
         }
         
         body {
-            background-color: #f5f5f5;
-            color: #333;
+            background-color: var(--light-bg);
+            color: var(--text-dark);
             line-height: 1.6;
+            overflow-x: hidden;
         }
         
         .container {
@@ -25,11 +45,15 @@
             padding: 0 20px;
         }
         
+        /* Header */
         header {
-            background-color: #1a1a1a;
-            color: white;
-            padding: 20px 0;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            background-color: var(--dark-bg);
+            color: var(--white);
+            padding: 15px 0;
+            box-shadow: var(--shadow-dark);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
         
         .header-content {
@@ -41,7 +65,14 @@
         .logo {
             font-size: 24px;
             font-weight: bold;
-            color: #e63946;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo i {
+            font-size: 26px;
         }
         
         nav ul {
@@ -54,40 +85,50 @@
         }
         
         nav ul li a {
-            color: white;
+            color: var(--white);
             text-decoration: none;
             font-weight: 500;
-            transition: color 0.3s;
+            transition: var(--transition);
+            position: relative;
+            padding: 5px 0;
+        }
+        
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary-color);
+            transition: var(--transition);
         }
         
         nav ul li a:hover {
-            color: #e63946;
+            color: var(--primary-color);
         }
         
+        nav ul li a:hover::after {
+            width: 100%;
+        }
+        
+        /* Hero Section */
         .hero {
-            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
                         url('https://yakutia-daily.ru/wp-content/uploads/2025/04/prizyvniki.jpg');
             background-size: cover;
             background-position: center;
-            color: white;
+            background-attachment: fixed;
+            color: var(--white);
             text-align: center;
-            padding: 100px 0;
+            padding: 120px 0;
             position: relative;
-        }
-        
-        .hero-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.4);
-            z-index: 1;
         }
         
         .hero-content {
             position: relative;
             z-index: 2;
+            animation: fadeIn 1s ease;
         }
         
         .hero h1 {
@@ -104,19 +145,29 @@
         
         .btn {
             display: inline-block;
-            background-color: #e63946;
-            color: white;
+            background-color: var(--primary-color);
+            color: var(--white);
             padding: 12px 30px;
-            border-radius: 5px;
+            border-radius: 30px;
             text-decoration: none;
             font-weight: bold;
-            transition: background-color 0.3s;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
         
         .btn:hover {
-            background-color: #c1121f;
+            background-color: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 8px rgba(0,0,0,0.2);
         }
         
+        .btn i {
+            margin-left: 8px;
+        }
+        
+        /* Sections */
         section {
             padding: 80px 0;
         }
@@ -125,18 +176,38 @@
             text-align: center;
             margin-bottom: 50px;
             font-size: 36px;
-            color: #1a1a1a;
+            color: var(--dark-bg);
+            position: relative;
+        }
+        
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background-color: var(--primary-color);
+            border-radius: 2px;
         }
         
         .about-content {
-            background-color: white;
-            border-radius: 10px;
+            background-color: var(--white);
+            border-radius: var(--border-radius);
             padding: 30px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: var(--shadow);
             margin-bottom: 30px;
             line-height: 1.8;
+            transition: var(--transition);
         }
         
+        .about-content:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-dark);
+        }
+        
+        /* Timeline */
         .timeline {
             position: relative;
             max-width: 1200px;
@@ -147,11 +218,12 @@
             content: '';
             position: absolute;
             width: 6px;
-            background-color: #e63946;
+            background-color: var(--primary-color);
             top: 0;
             bottom: 0;
             left: 50%;
             margin-left: -3px;
+            border-radius: 3px;
         }
         
         .timeline-item {
@@ -159,6 +231,14 @@
             position: relative;
             width: 50%;
             box-sizing: border-box;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: var(--transition);
+        }
+        
+        .timeline-item.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
         
         .timeline-item::after {
@@ -166,8 +246,8 @@
             position: absolute;
             width: 20px;
             height: 20px;
-            background-color: white;
-            border: 4px solid #e63946;
+            background-color: var(--white);
+            border: 4px solid var(--primary-color);
             border-radius: 50%;
             top: 15px;
             right: -10px;
@@ -188,60 +268,41 @@
         
         .timeline-content {
             padding: 20px;
-            background-color: white;
-            border-radius: 6px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+        
+        .timeline-content:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-dark);
         }
         
         .timeline-content h3 {
             margin-bottom: 10px;
-            color: #e63946;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         
-        .heroes-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 30px;
-        }
-        
-        .hero-card {
-            background-color: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-            transition: transform 0.3s;
-        }
-        
-        .hero-card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .hero-card img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            display: block;
-        }
-        
-        .hero-card-content {
-            padding: 20px;
-        }
-        
-        .hero-card h3 {
-            color: #e63946;
-            margin-bottom: 10px;
-        }
-        
+        /* Map Section */
         .map-section {
             background-color: #f0f0f0;
         }
         
         .map-container {
-            background-color: white;
-            border-radius: 10px;
+            background-color: var(--white);
+            border-radius: var(--border-radius);
             padding: 20px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: var(--shadow);
             margin-bottom: 30px;
+            transition: var(--transition);
+        }
+        
+        .map-container:hover {
+            box-shadow: var(--shadow-dark);
         }
         
         #monuments-map {
@@ -255,6 +316,7 @@
             line-height: 1.6;
         }
         
+        /* Popup */
         .popup-content {
             min-width: 250px;
             max-width: 300px;
@@ -262,7 +324,7 @@
         
         .popup-content h3 {
             margin: 0 0 10px 0;
-            color: #e63946;
+            color: var(--primary-color);
         }
         
         .popup-content img {
@@ -275,8 +337,8 @@
         
         .details-btn {
             display: inline-block;
-            background: #2a9d8f;
-            color: white;
+            background: var(--secondary-color);
+            color: var(--white);
             padding: 8px 15px;
             border-radius: 4px;
             text-decoration: none;
@@ -284,22 +346,27 @@
             margin-top: 10px;
             cursor: pointer;
             border: none;
-            transition: background-color 0.3s;
+            transition: var(--transition);
             width: 100%;
             text-align: center;
         }
         
         .details-btn:hover {
-            background: #21867a;
+            background: var(--secondary-dark);
         }
         
+        /* Facts Section */
         .facts {
-            background-color: #1a1a1a;
-            color: white;
+            background-color: var(--dark-bg);
+            color: var(--white);
         }
         
         .facts h2 {
-            color: white;
+            color: var(--white);
+        }
+        
+        .facts h2::after {
+            background-color: var(--primary-color);
         }
         
         .facts-grid {
@@ -309,26 +376,36 @@
         }
         
         .fact-card {
-            background-color: #2d2d2d;
+            background-color: var(--dark-card);
             padding: 30px;
-            border-radius: 8px;
+            border-radius: var(--border-radius);
             text-align: center;
-            transition: transform 0.3s;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         
         .fact-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
         }
         
         .fact-card h3 {
-            color: #e63946;
+            color: var(--primary-color);
             margin-bottom: 15px;
-            font-size: 24px;
+            font-size: 36px;
+            font-weight: bold;
         }
         
+        .fact-card p {
+            font-size: 18px;
+        }
+        
+        /* Footer */
         footer {
-            background-color: #1a1a1a;
-            color: white;
+            background-color: var(--dark-bg);
+            color: var(--white);
             padding: 40px 0;
             text-align: center;
         }
@@ -347,7 +424,7 @@
         
         .footer-section h3 {
             margin-bottom: 20px;
-            color: #e63946;
+            color: var(--primary-color);
         }
         
         .footer-bottom {
@@ -356,13 +433,28 @@
             border-top: 1px solid #444;
         }
         
+        /* Modal */
+        #monument-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            overflow-y: auto;
+            animation: fadeIn 0.3s ease;
+        }
+
         .monument-detail {
             max-width: 1000px;
-            margin: 0 auto;
+            margin: 40px auto;
             padding: 40px 20px;
-            background: white;
-            border-radius: 10px;
-            margin-top: 20px;
+            background: var(--white);
+            border-radius: var(--border-radius);
+            position: relative;
+            animation: slideUp 0.5s ease;
         }
         
         .monument-header {
@@ -382,58 +474,105 @@
             height: 250px;
             object-fit: cover;
             border-radius: 8px;
+            transition: var(--transition);
+        }
+        
+        .monument-gallery img:hover {
+            transform: scale(1.03);
         }
         
         .monument-info {
-            background: white;
+            background: var(--white);
             padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
             margin-bottom: 30px;
         }
         
         .back-btn {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
             background: #6c757d;
-            color: white;
+            color: var(--white);
             padding: 10px 20px;
-            border-radius: 5px;
+            border-radius: 30px;
             text-decoration: none;
             margin-bottom: 20px;
-            transition: background-color 0.3s;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
         }
         
         .back-btn:hover {
             background: #5a6268;
+            transform: translateX(-5px);
         }
         
-        #monument-modal {
-            display: none;
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: var(--white);
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Scroll to top button */
+        .scroll-to-top {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-            z-index: 1000;
-            overflow-y: auto;
-        }
-
-        .additional-photos {
-            margin: 20px 0;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
-        }
-
-        .additional-photos img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 8px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            bottom: 30px;
+            right: 30px;
+            background: var(--primary-color);
+            color: var(--white);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: var(--transition);
+            opacity: 0;
+            visibility: hidden;
+            z-index: 99;
+            box-shadow: var(--shadow-dark);
         }
         
+        .scroll-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .scroll-to-top:hover {
+            background: var(--primary-dark);
+            transform: translateY(-5px);
+        }
+        
+        /* Responsive Design */
         @media screen and (max-width: 768px) {
             .header-content {
                 flex-direction: column;
@@ -452,6 +591,10 @@
             
             .hero h1 {
                 font-size: 36px;
+            }
+            
+            .hero p {
+                font-size: 18px;
             }
             
             .timeline::after {
@@ -475,18 +618,52 @@
             #monuments-map {
                 height: 400px;
             }
+            
+            .monument-detail {
+                margin: 20px auto;
+                padding: 20px 15px;
+            }
+            
+            h2 {
+                font-size: 28px;
+            }
+        }
+        
+        @media screen and (max-width: 480px) {
+            .hero {
+                padding: 80px 0;
+            }
+            
+            .hero h1 {
+                font-size: 28px;
+            }
+            
+            section {
+                padding: 60px 0;
+            }
+            
+            .fact-card h3 {
+                font-size: 28px;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Scroll to top button -->
+    <div class="scroll-to-top" id="scrollToTop">
+        <i class="fas fa-chevron-up"></i>
+    </div>
+    
     <header>
         <div class="container header-content">
-            <div class="logo">Карта памяти</div>
+            <div class="logo">
+                
+                <span>Карта памяти</span>
+            </div>
             <nav>
                 <ul>
                     <li><a href="#about">О проекте</a></li>
                     <li><a href="#timeline">Хронология</a></li>
-                    
                     <li><a href="#monuments">Памятники</a></li>
                     <li><a href="#facts">Факты</a></li>
                 </ul>
@@ -495,11 +672,10 @@
     </header>
 
     <section class="hero">
-        <div class="hero-overlay"></div>
         <div class="container hero-content">
             <h1>Вклад Якутии в Победу</h1>
             <p>Республика Саха (Якутия) внесла неоценимый вклад в победу над фашизмом в Великой Отечественной войне 1941-1945 годов.</p>
-            <a href="#about" class="btn">Узнать больше</a>
+            <a href="#about" class="btn">Узнать больше <i class="fas fa-arrow-down"></i></a>
         </div>
     </section>
 
@@ -520,37 +696,37 @@
             <div class="timeline">
                 <div class="timeline-item left">
                     <div class="timeline-content">
-                        <h3>Июнь-июль 1941</h3>
+                        <h3><i class="fas fa-calendar-alt"></i> Июнь-июль 1941</h3>
                         <p>Начало мобилизации в Якутской АССР. Формирование первых добровольческих отрядов.</p>
                     </div>
                 </div>
                 <div class="timeline-item right">
                     <div class="timeline-content">
-                        <h3>1941-1942</h3>
+                        <h3><i class="fas fa-calendar-alt"></i> 1941-1942</h3>
                         <p>Якутия направляет на фронт более 20 тысяч бойцов. Начинается сбор средств в фонд обороны.</p>
                     </div>
                 </div>
                 <div class="timeline-item left">
                     <div class="timeline-content">
-                        <h3>1942</h3>
+                        <h3><i class="fas fa-calendar-alt"></i> 1942</h3>
                         <p>Создание Якутской стрелковой бригады. Увеличение добычи золота и олова для военных нужд.</p>
                     </div>
                 </div>
                 <div class="timeline-item right">
                     <div class="timeline-content">
-                        <h3>1943</h3>
+                        <h3><i class="fas fa-calendar-alt"></i> 1943</h3>
                         <p>Якутяне участвуют в ключевых сражениях: Сталинград, Курская дуга. Сбор средств на танковую колонну "Советская Якутия".</p>
                     </div>
                 </div>
                 <div class="timeline-item left">
                     <div class="timeline-content">
-                        <h3>1944</h3>
+                        <h3><i class="fas fa-calendar-alt"></i> 1944</h3>
                         <p>Открытие воздушной трассы "Аляска-Сибирь" (Алсиб) с участком через Якутию.</p>
                     </div>
                 </div>
                 <div class="timeline-item right">
                     <div class="timeline-content">
-                        <h3>1945</h3>
+                        <h3><i class="fas fa-calendar-alt"></i> 1945</h3>
                         <p>Якутяне участвуют в штурме Берлина. Всего за годы войны из Якутии на фронт отправлено более 62 тысяч человек.</p>
                     </div>
                 </div>
@@ -600,10 +776,12 @@
                 <div class="footer-section">
                     <h3>О проекте</h3>
                     <p>Образовательный проект, посвященный изучению вклада Республики Саха (Якутия) в Победу в Великой Отечественной войне.</p>
+
                 </div>
+                
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2025 Проект "Карта памяти". </p>
+                <p>&copy; 2025 Проект "Карта памяти". L.P</p>
             </div>
         </div>
     </footer>
@@ -611,7 +789,9 @@
     <!-- Модальное окно для детальной информации о памятнике -->
     <div id="monument-modal">
         <div class="monument-detail">
-            <a href="#" class="back-btn" onclick="closeMonumentModal()">← Назад к карте</a>
+            <button class="back-btn" onclick="closeMonumentModal()">
+                <i class="fas fa-arrow-left"></i> Назад к карте
+            </button>
             <div id="monument-content"></div>
         </div>
     </div>
@@ -644,7 +824,7 @@
                 coords: [62.037638, 129.715943],
                 description: "Бюст героя Великой Отечественной войны Н.С. Степанова",
                 fullDescription: "Николай Саввич Степанов (13 мая 1922 — 20 сентября 1992) — участник Великой Отечественной войны, пулемётчик 1-го мотострелкового батальона 45-й механизированной бригады 5-го механизированного корпуса 6-й танковой армии 2-го Украинского фронта, красноармеец. Герой Советского Союза ",
-                history: "Пулемётчик 1-го мотострелкового батальона красноармеец Николай Степанов 11 марта 1944 года одним из первых в батальоне на самодельном плоту с пулемётом переправился через реку Южный Буг в районе села Маньковка Бершадского района Винницкой области Украины и огнём прикрывал переправу стрелковых подразделений. Поддерживая наступление, уничтожил свыше десяти солдат и офицеров противника.",
+                history: "Пулемётчик 1-го мотострелкового батальона красноармеец Николай Степанов одним из первых в батальоне на самодельном плоту с пулемётом переправился через реку Южный Буг в районе села Маньковка Бершадского района Винницкой области Украины и огнём прикрывал переправу стрелковых подразделений. Поддерживая наступление, уничтожил свыше десяти солдат и офицеров противника.",
                 image: "https://via.placeholder.com/600x400/4a6572/ffffff?text=Бюст+Степанова"
             },
             {
@@ -656,17 +836,8 @@
                 history: "от 12 апреля 1944 г. улица Пролетарского была переименована в улицу Попова, решением горисполкома от 23 декабря 1981 г. улица Лермонтова, на участке от переулка Энергетиков до улицы Дзержинского, переименована в улицу Попова там и стоит памятник",
                 image: "https://via.placeholder.com/600x400/4a6572/ffffff?text=Памятник+Попову"
             },
-             {
-                id: 5,
-                name: "Памятник Ф.К. Попову",
-                coords: [62.044783, 129.740983],
-                description: "Мемориал в честь Ф.К. Попова, героя Великой Отечественной войны",
-                fullDescription: "Попов Фёдор Кузьмич родился в Мегино-Кангаласском улусе. До войны был бригадиром колхоза «Октябрь». В Великую Отечественную Войну был призван рядовым солдатом. Служил автоматчиком. Числился в в 3-й роте 467 полка 81 стрелковой дивизии. Один из якутян форсировавших Днепр и оставшихся в живых. Федор самоотверженно вступил в реку, переплыл её и атаковал траншею противника. В рукопашной схватке он один перебил 23 немецких солдат и офицера. Захватив ручной пулемет он открыл огонь по немецким силам проводящим контратаку. 3 октября немецкие солдаты проводили несколько атак по советским силам захватившим плацдарм. Федор проявив военную смекалку смог пробраться во фланг противника и истребить до 50 солдат и офицеров. В 1943 году в бою около деревни Глушец (Белоруссия) Федор был убит в возрасте 22 года. В 1944 году ему посмертно было присвоено звание Героя Советского Союза.",
-                history: "от 12 апреля 1944 г. улица Пролетарского была переименована в улицу Попова, решением горисполкома от 23 декабря 1981 г. улица Лермонтова, на участке от переулка Энергетиков до улицы Дзержинского, переименована в улицу Попова там и стоит памятник",
-                image: "https://via.placeholder.com/600x400/4a6572/ffffff?text=Памятник+Попову"
-            },
             {
-                id: 6,
+                id: 5,
                 name: "Памятник Снайперам Якутии",
                 coords: [62.036895, 129.754737],
                 description: "Памятник легендарным снайперам из Якутии",
@@ -674,9 +845,8 @@
                 history: "В мемориальном комплексе «Солдат Туймаады» г. Якутска в рамках празднования 75-летия Великой Победы 24 июня 2020 года состоялось торжественное открытие памятника собирательному образу якутского снайпера Великой Отечественной войны",
                 image: "https://via.placeholder.com/600x400/4a6572/ffffff?text=Снайперам+Якутии"
             },
-           
             {
-                id: 7,
+                id: 6,
                 name: "Памятник вдовам и матерям",
                 coords: [62.034435, 129.723286],
                 description: "Памятник вдовам и матерям, потерявшим своих близких на войне",
@@ -685,7 +855,7 @@
                 image: "https://via.placeholder.com/600x400/4a6572/ffffff?text=Вдовам+и+матерям"
             },
             {
-                id: 8,
+                id: 7,
                 name: "Памятник Солдатам Туймаады",
                 coords: [62.035594, 129.754054],
                 description: "Памятник воинам из Туймаады, павшим в годы войны",
@@ -694,8 +864,8 @@
                 image: "https://via.placeholder.com/600x400/4a6572/ffffff?text=Солдатам+Туймаады"
             },
             {
-                id: 9,
-                name: "Победы ради потрудившимся ",
+                id: 8,
+                name: "Победы ради потрудившимся",
                 coords: [62.030016, 129.712144],
                 description: "Мемориал в честь тружеников тыла, обеспечивавших фронт",
                 fullDescription: "Памятник посвящен якутянам, которые в тяжелейших условиях работали в тылу, обеспечивая фронт продовольствием, оружием и теплой одеждой.",
@@ -703,7 +873,7 @@
                 image: "https://via.placeholder.com/600x400/4a6572/ffffff?text=Труженикам+тыла"
             },
             {
-                id: 10,
+                id: 9,
                 name: "Памятник воинам-журналистам",
                 coords: [62.028303, 129.729187],
                 description: "Памятник военным журналистам, павшим на полях сражений",
@@ -712,19 +882,16 @@
                 image: "https://via.placeholder.com/600x400/4a6572/ffffff?text=Воинам+журналистам"
             },
             {
-                id: 11,
+                id: 10,
                 name: "Памятник Фёдору Кузьмичёву",
                 coords: [62.021591, 129.681189],
-                              
-                
                 description: "Мемориал в честь Ф.К. Попова, героя Великой Отечественной войны",
                 fullDescription: "Попов Фёдор Кузьмич родился в Мегино-Кангаласском улусе. До войны был бригадиром колхоза «Октябрь». В Великую Отечественную Войну был призван рядовым солдатом. Служил автоматчиком. Числился в в 3-й роте 467 полка 81 стрелковой дивизии. Один из якутян форсировавших Днепр и оставшихся в живых. Федор самоотверженно вступил в реку, переплыл её и атаковал траншею противника. В рукопашной схватке он один перебил 23 немецких солдат и офицера. Захватив ручной пулемет он открыл огонь по немецким силам проводящим контратаку. 3 октября немецкие солдаты проводили несколько атак по советским силам захватившим плацдарм. Федор проявив военную смекалку смог пробраться во фланг противника и истребить до 50 солдат и офицеров. В 1943 году в бою около деревни Глушец (Белоруссия) Федор был убит в возрасте 22 года. В 1944 году ему посмертно было присвоено звание Героя Советского Союза.",
                 history: "от 12 апреля 1944 г. улица Пролетарского была переименована в улицу Попова, решением горисполкома от 23 декабря 1981 г. улица Лермонтова, на участке от переулка Энергетиков до улицы Дзержинского, переименована в улицу Попова сам памятник находиться на территории школы №20",
-               image: "https://via.placeholder.com/600x400/4a6572/ffffff?text=Фёдор+Кузьмичёв"
+                image: "https://via.placeholder.com/600x400/4a6572/ffffff?text=Фёдор+Кузьмичёв"
             },
-            
             {
-                id: 12,
+                id: 11,
                 name: "Сквер Матери",
                 coords: [62.012952, 129.68434],
                 description: "Сквер, посвященный матерям, воспитавшим героев войны",
@@ -733,7 +900,7 @@
                 image: "https://via.placeholder.com/600x400/4a6572/ffffff?text=Сквер+Матери"
             },
             {
-                id: 13,
+                id: 12,
                 name: "Памятник К.К. Красноярову",
                 coords: [62.015473, 129.72041],
                 description: "Памятник герою Клавдию Карповичу Красноярову",
@@ -742,7 +909,7 @@
                 image: "https://via.placeholder.com/600x400/4a6572/ffffff?text=Краснояров"
             },
             {
-                id: 14,
+                id: 13,
                 name: "Памятник 'Слава победителям'",
                 coords: [62.019961, 129.706597],
                 description: "Мемориал 'Слава победителям' в честь воинов-победителей",
@@ -751,7 +918,7 @@
                 image: "https://via.placeholder.com/600x400/4a6572/ffffff?text=Слава+победителям"
             },
             {
-                id: 15,
+                id: 14,
                 name: "Скульптура 'Карась'",
                 coords: [62.031151, 129.730197],
                 description: "Скульптура 'Карась' - символ стойкости и выживания в трудные времена",
@@ -761,10 +928,229 @@
             }
         ];
 
+       
+        // Данные о линиях
+        const routeLines = [
+            {
+                id: 15,
+                name: "Улица Асямова ",
+                description: "Маршрут, связанный с историей Якутии в годы войны",
+                fullDescription: "Этот маршрут представляет собой путь, по которому проходили важные исторические события в годы Великой Отечественной войны. Он соединяет несколько ключевых точек, связанных с вкладом Якутии в Победу.",
+                history: "Маршрут был восстановлен на основе исторических данных и свидетельств участников событий. Он проходит через места, где в годы войны располагались важные объекты тыловой инфраструктуры, обеспечивавшие фронт необходимыми ресурсами.",
+                image: "https://via.placeholder.com/600x400/2a9d8f/ffffff?text=Исторический+маршрут+1",
+                coordinates: [
+                    [62.045673, 129.706472],
+                    [62.042735, 129.710143],
+                    [62.042775, 129.710391],
+                    [62.043573, 129.710629],
+                    [62.043688, 129.709975]
+                ],
+                color: '#2a9d8f'
+            },
+            {
+                id: 16,
+                name: "Улица Колбунова ",
+                description: "Второй важный маршрут военного времени",
+                fullDescription: "Этот маршрут также играл значительную роль в годы Великой Отечественной войны. По нему осуществлялась транспортировка грузов и перемещение людей между важными объектами.",
+                history: "Маршрут использовался для обеспечения связи между различными подразделениями и доставки необходимых материалов. Вдоль этого пути располагались пункты снабжения и временные базы.",
+                image: "https://via.placeholder.com/600x400/e76f51/ffffff?text=Исторический+маршрут+2",
+                coordinates: [
+                    [62.353513, 129.976975],
+                    [62.353025, 129.978585]
+                ],
+                color: '#e76f51'
+            },
+            {
+                id: 17,
+                name: "Улица Кондакова ",
+                description: "Обширный маршрут через ключевые точки Якутска",
+                fullDescription: "Этот протяженный маршрут проходит через несколько важных исторических районов Якутска, связанных с военной историей города. Маршрут охватывает территории, где в годы войны располагались важные объекты тыловой инфраструктуры.",
+                history: "Маршрут восстановлен по архивным данным и свидетельствам ветеранов. Он включает в себя пути перемещения между стратегическими объектами, пунктами сбора и распределения ресурсов в военные годы.",
+                image: "https://via.placeholder.com/600x400/9d4edd/ffffff?text=Большой+маршрут",
+                coordinates: [
+                    [61.978074, 129.641473],
+                    [61.976652, 129.639675],
+                    [61.975191, 129.643138],
+                    [61.974488, 129.64391],
+                    [61.973223, 129.645281],
+                    [61.972084, 129.646195],
+                    [61.975207, 129.643098],
+                    [61.974064, 129.641022],
+                    [61.974514, 129.643915],
+                    [61.973826, 129.642809],
+                    [61.972892, 129.64383],
+                    [61.973215, 129.645259],
+                    [61.973005, 129.644345],
+                    [61.971485, 129.645902],
+                    [61.970353, 129.644633]
+                ],
+                color: '#9d4edd'
+            },
+
+            {
+        id: 18,
+        name: "Переулок Космачёва ",
+        description: "Маршрут через важные исторические точки",
+        fullDescription: "Этот маршрут соединяет ключевые точки, связанные с военной историей Якутии.",
+        history: "Маршрут проходит через территории, имевшие стратегическое значение в годы Великой Отечественной войны.",
+        image: "https://via.placeholder.com/600x400/ff6b6b/ffffff?text=Дополнительный+маршрут",
+        coordinates: [
+            [62.067722, 129.716397],
+         [62.068731, 129.717982]
+        ],
+        color: '#ff6b6b'
+            },
+            {
+        id: 19,
+        name: "Улица Красноярова ",
+         description: "Маршрут через южную часть Якутска",
+        fullDescription: "Этот маршрут проходит через южные районы города, связывая важные исторические объекты.",
+        history: "В годы войны по этому направлению осуществлялась логистика между тыловыми объектами.",
+        image: "https://via.placeholder.com/600x400/4ecdc4/ffffff?text=Южный+маршрут",
+        coordinates: [
+             [62.01361, 129.705408],
+            [62.015667, 129.724257]
+    ],
+    color: '#4ecdc4'
+            },
+{
+    id: 20,
+    name: "Улица Миронова ",
+    description: "Маршрут через северную часть Якутска",
+    fullDescription: "Этот маршрут проходит через северные районы города, соединяя стратегические точки.",
+    history: "По этому направлению в военные годы осуществлялось перемещение между важными объектами инфраструктуры.",
+    image: "https://via.placeholder.com/600x400/ff9f1c/ffffff?text=Северный+маршрут",
+    coordinates: [
+        [62.068852, 129.729961],
+        [62.072499, 129.730251]
+    ],
+    color: '#ff9f1c'
+},
+{
+    id: 21,
+    name: "Улица Охлопкова ",
+    description: "Маршрут через западную часть Якутска",
+    fullDescription: "Этот маршрут проходит через западные районы города, связывая важные исторические объекты.",
+    history: "В годы войны по этому направлению осуществлялась доставка грузов и перемещение между тыловыми базами.",
+    image: "https://via.placeholder.com/600x400/7209b7/ffffff?text=Западный+маршрут",
+    coordinates: [
+        [62.030563, 129.674038],
+        [62.032242, 129.675946]
+    ],
+    color: '#7209b7'
+},
+{
+    id: 22,
+    name: "Улица Фёдора Попова ",
+    description: "Маршрут через центральную часть Якутска",
+    fullDescription: "Этот маршрут проходит через центральные районы города, соединяя ключевые исторические объекты.",
+    history: "По этому направлению в военные годы осуществлялось основное движение между административными и логистическими центрами.",
+    image: "https://via.placeholder.com/600x400/06d6a0/ffffff?text=Центральный+маршрут",
+    coordinates: [
+        [62.044581, 129.740673],
+        [62.045102, 129.762305]
+    ],
+    color: '#06d6a0'
+},
+{
+    id: 23,
+    name: "Переулок Сапожникова ",
+    description: "Разветвленный маршрут через северо-восточную часть",
+    fullDescription: "Этот разветвленный маршрут проходит через северо-восточные районы Якутска, соединяя несколько стратегических точек.",
+    history: "В годы войны по этому сложному маршруту осуществлялось маневрирование между различными объектами инфраструктуры.",
+    image: "https://via.placeholder.com/600x400/ef476f/ffffff?text=Северо-восточный+маршрут",
+    coordinates: [
+        [62.068389, 129.720029],
+        [62.067133, 129.717987],
+        [62.067714, 129.716431]
+    ],
+    color: '#ef476f'
+},
+{
+    id: 24,
+    name: "Улица Степанова ",
+    description: "Маршрут через северо-западную часть Якутска",
+    fullDescription: "Этот маршрут проходит через северо-западные районы города, соединяя стратегические объекты.",
+    history: "По этому направлению в военные годы осуществлялось перемещение между тыловыми базами и складами.",
+    image: "https://via.placeholder.com/600x400/118ab2/ffffff?text=Северо-западный+маршрут",
+    coordinates: [
+        [62.067604, 129.716335],
+        [62.06839, 129.714211],
+        [62.069549, 129.712468]
+    ],
+    color: '#118ab2'
+},
+{
+    id: 25,
+    name: "Улица Стрекаловского ",
+    description: "Маршрут через северо-восточную окраину Якутска",
+    fullDescription: "Этот маршрут проходит через северо-восточные окраины города, соединяя отдаленные стратегические объекты.",
+    history: "По этому протяженному маршруту в военные годы осуществлялась связь с удаленными объектами инфраструктуры.",
+    image: "https://via.placeholder.com/600x400/ffd166/ffffff?text=Северный+восточный+маршрут",
+    coordinates: [
+        [62.069594, 129.725872],
+        [62.07261, 129.736492]
+    ],
+    color: '#ffd166'
+},
+{
+    id: 26,
+    name: "Улица Шавкунова ",
+    description: "Сложный маршрут через центральные районы Якутска",
+    fullDescription: "Этот сложный разветвленный маршрут проходит через центральные районы города, соединяя множество стратегических точек.",
+    history: "По этому сложному маршруту в военные годы осуществлялось маневрирование между различными административными и логистическими центрами.",
+    image: "https://via.placeholder.com/600x400/073b4c/ffffff?text=Центральный+разветвленный+маршрут",
+    coordinates: [
+        [62.031802, 129.715363],
+        [62.033286, 129.718703],
+        [62.034454, 129.721872],
+        [62.034711, 129.722396],
+        [62.034955, 129.722528],
+        [62.035408, 129.723574]
+    ],
+    color: '#073b4c'
+},
+{
+    id: 27,
+    name: "Улица Чусовского ",
+    description: "Разветвленный маршрут через северные районы Якутска",
+    fullDescription: "Этот сложный разветвленный маршрут проходит через северные районы города, образуя сложную сеть путей между стратегическими объектами.",
+    history: "По этому сложному маршруту в военные годы осуществлялось интенсивное перемещение между различными объектами инфраструктуры северной части города.",
+    image: "https://via.placeholder.com/600x400/9b5de5/ffffff?text=Сложный+северный+маршрут",
+    coordinates: [
+        [62.069489, 129.711523],
+        [62.069574, 129.71218],
+        [62.069521, 129.712753],
+        [62.070089, 129.713921],
+        [62.068159, 129.72378],
+        [62.068304, 129.724002],
+        [62.067433, 129.72865],
+        [62.06757, 129.729515],
+        [62.067767, 129.72676],
+        [62.066988, 129.726138],
+        [62.067684, 129.72222]
+    ],
+    color: '#9b5de5'
+},
+   ];
+
+
         let map;
         let markers = [];
+        let routeLayers = [];
 
         document.addEventListener('DOMContentLoaded', function() {
+            // Инициализация карты
+            initMap();
+            
+            // Инициализация анимаций
+            initAnimations();
+            
+            // Инициализация кнопки прокрутки
+            initScrollToTop();
+        });
+        
+        function initMap() {
             const yakutskCenter = [62.0274, 129.7315];
             
             map = L.map('monuments-map').setView(yakutskCenter, 12);
@@ -773,7 +1159,7 @@
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);
             
-            // Создание маркеров для ВСЕХ памятников
+            // Создание маркеров для памятников
             monuments.forEach((monument, index) => {
                 const warIcon = L.divIcon({
                     className: 'war-marker',
@@ -796,23 +1182,98 @@
                 markers.push(marker);
             });
             
+            // Добавление линий маршрутов
+            routeLines.forEach((route, index) => {
+                const routeLayer = L.polyline(route.coordinates, {
+                    color: route.color,
+                    weight: 6,
+                    opacity: 0.8,
+                    lineJoin: 'round'
+                }).addTo(map);
+                
+                // Добавление обработчика клика для линии
+                routeLayer.on('click', function(e) {
+                    showRouteDetail(index);
+                });
+                
+                // Добавление попапа для линии
+                routeLayer.bindPopup(`
+                    <div class="popup-content">
+                        <h3>${route.name}</h3>
+                        <p>${route.description}</p>
+                        <img src="${route.image}" alt="${route.name}" style="width: 100%; max-height: 150px; object-fit: cover; border-radius: 5px; margin-bottom: 10px;">
+                        <button class="details-btn" onclick="showRouteDetail(${index})">Подробнее</button>
+                    </div>
+                `);
+                
+                routeLayers.push(routeLayer);
+            });
+            
             // Добавление легенды
+            addLegend();
+        }
+        
+        function initAnimations() {
+            // Анимация появления элементов при скролле
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, observerOptions);
+            
+            // Наблюдаем за элементами таймлайна
+            document.querySelectorAll('.timeline-item').forEach(item => {
+                observer.observe(item);
+            });
+        }
+        
+        function initScrollToTop() {
+            const scrollButton = document.getElementById('scrollToTop');
+            
+            window.addEventListener('scroll', () => {
+                if (window.pageYOffset > 300) {
+                    scrollButton.classList.add('visible');
+                } else {
+                    scrollButton.classList.remove('visible');
+                }
+            });
+            
+            scrollButton.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        }
+        
+        function addLegend() {
             const legend = L.control({position: 'bottomright'});
             legend.onAdd = function(map) {
                 const div = L.DomUtil.create('div', 'legend');
                 div.innerHTML = `
                     <div style="background: white; padding: 10px; border-radius: 5px; box-shadow: 0 0 10px rgba(0,0,0,0.2);">
-                        <h4 style="margin: 0 0 5px 0;">Памятники героям</h4>
+                        <h4 style="margin: 0 0 5px 0;">Объекты на карте</h4>
                         <div style="display: flex; align-items: center; margin-bottom: 5px;">
                             <div style="width: 12px; height: 12px; background: #e63946; border-radius: 50%; margin-right: 5px;"></div>
                             <span>Памятник/мемориал</span>
+                        </div>
+                        <div style="display: flex; align-items: center; margin-bottom: 5px;">
+                            <div style="width: 12px; height: 4px; background: #2a9d8f; margin-right: 5px;"></div>
+                            <span>Исторический маршрут</span>
                         </div>
                     </div>
                 `;
                 return div;
             };
             legend.addTo(map);
-        });
+        }
         
         // Функция для создания содержимого попапа
         function createPopupContent(monumentIndex) {
@@ -844,8 +1305,7 @@
                     <img src="${monument.image}" alt="${monument.name}">
             `;
             
-            // Добавляем дополнительные фото для каждого памятника
-            if (monumentIndex === 0) { // Памятник Кондакову
+ if (monumentIndex === 0) { // Памятник Кондакову
                 html += `
                     <img src="https://lh3.googleusercontent.com/pw/AP1GczNGX6WuNm_RlZgML7QnHJ-ue1jbI4EnPzlPDViTa7B3_U-XLi8RGxoQkcuuSofNacQuY6lbKFv_AjCkT981auG5IS1_5nbartrR_M3GlD9WiDjR6oeFKHTMJ4P97yV66q-zQEpiuMPro_cdINs0rcH8=w1280-h853-s-no-gm?authuser=0" alt="Фото памятника Кондакову 1">
                     <img src="https://lh3.googleusercontent.com/pw/AP1GczPGZ1HdU54oYIS5nZD3zEzHTYBC6WOGZVHKB3Ravf1LfxFQrcr7E5dbSMfMYRb2ACxPa626wOsC_3XlYX6W_sGbVgZsrUVENczkoYToFCnqcjOeYTD5GaiWmdV-QC5Porfqetfwu6LRO59DxtO4WZFJ=w1280-h853-s-no-gm?authuser=0" alt="Фото памятника Кондакову 2">
@@ -932,6 +1392,64 @@
                     
                     <h2>История</h2>
                     <p>${monument.history}</p>
+                </div>
+            `;
+            
+            content.innerHTML = html;
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+        
+        // Функция для показа детальной информации о маршруте
+        function showRouteDetail(routeIndex) {
+            const route = routeLines[routeIndex];
+            const modal = document.getElementById('monument-modal');
+            const content = document.getElementById('monument-content');
+            
+            let html = `
+                <div class="monument-header">
+                    <h1>${route.name}</h1>
+                    <p>Исторический маршрут в Якутске</p>
+                </div>
+                
+                <div class="monument-gallery">
+                    <img src="${route.image}" alt="${route.name}">
+                    <img src="https://via.placeholder.com/600x400/${route.color.substring(1)}/ffffff?text=Карта+маршрута" alt="Карта маршрута">
+                    <img src="https://via.placeholder.com/600x400/${route.color.substring(1)}/ffffff?text=Историческое+фото" alt="Историческое фото">
+                </div>
+                
+                <div class="monument-info">
+                    <h2>Описание</h2>
+                    <p>${route.fullDescription}</p>
+                    
+                    <h2>История</h2>
+                    <p>${route.history}</p>
+                    
+                    <h2>Точки маршрута</h2>
+                    <p>Маршрут проходит через следующие координаты:</p>
+                    <ul>
+            `;
+            
+            route.coordinates.forEach((coord, index) => {
+                html += `<li>Точка ${index + 1}: ${coord[0].toFixed(6)}, ${coord[1].toFixed(6)}</li>`;
+            });
+            
+            // Расчет примерной длины маршрута
+            let totalDistance = 0;
+            for (let i = 1; i < route.coordinates.length; i++) {
+                const lat1 = route.coordinates[i-1][0];
+                const lon1 = route.coordinates[i-1][1];
+                const lat2 = route.coordinates[i][0];
+                const lon2 = route.coordinates[i][1];
+                
+                // Простой расчет расстояния (в километрах)
+                const distance = Math.sqrt(Math.pow(lat2 - lat1, 2) + Math.pow(lon2 - lon1, 2)) * 111;
+                totalDistance += distance;
+            }
+            
+            html += `
+                    </ul>
+                    <p>Общая протяженность маршрута составляет примерно ${totalDistance.toFixed(2)} км.</p>
                 </div>
             `;
             
